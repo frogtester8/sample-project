@@ -8,6 +8,7 @@ trigger:
 
 pool:
   vmImage: 'ubuntu-latest'
+
 - task: Gradle@2
   inputs:
     gradleWrapperFile: 'gradlew'
@@ -16,18 +17,14 @@ pool:
     testResultsFiles: '**/TEST-*.xml'
     javaHomeOption: 'JDKVersion'
     sonarQubeRunAnalysis: false
-steps:
-- task: Gradle@2
+- task: ArtifactoryGradle@1
   inputs:
-    workingDirectory: ''
-    gradleWrapperFile: 'gradlew'
-    gradleOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/TEST-*.xml'
-    tasks: 'build'
+    gradleBuildFile: 'build.gradle'
+    tasks: 'artifactoryPublish'
+    artifactoryResolverService: 'bandi-cloud'
+    sourceRepo: 'caf_java_virtual'
+    artifactoryDeployerService: 'bandi-cloud'
+    targetRepo: 'caf_java_virtual'
 - task: ArtifactoryPublishBuildInfo@1
   inputs:
     artifactoryService: 'bandi-cloud'
